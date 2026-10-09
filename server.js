@@ -18,6 +18,14 @@ const swaggerDocument = require("./swagger/swagger.json");
 
 const app = express();
 
+
+//
+if (process.env.NODE_ENV === "development") {
+    app.set("trust proxy", 1);
+}
+//
+
+
 const PORT = process.env.PORT || 8080;
 
 // Connect to MongoDB
