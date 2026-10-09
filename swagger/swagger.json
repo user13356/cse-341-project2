@@ -1,589 +1,572 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "title": "Corbin's Project and Task Management API",
-    "version": "1.0.0",
-    "description": "A REST API built with Node.js, Express, MongoDB, Mongoose and Google OAuth. The API provides CRUD operations for projects and tasks."
-  },
-  "servers": [
-    {
-      "url": "http://localhost:8080",
-      "description": "Local development server"
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Corbin's Project and Task Management API",
+        "version": "1.0.0",
+        "description": "A REST API built with Node.js, Express, MongoDB, Mongoose and Google OAuth. The API provides CRUD operations for projects and tasks."
     },
-    {
-      "url": "https://YOUR-RENDER-APP.onrender.com",
-      "description": "Production Render server"
-    }
-  ],
-  "tags": [
-    {
-      "name": "Authentication",
-      "description": "Google OAuth authentication operations"
-    },
-    {
-      "name": "Projects",
-      "description": "Project CRUD operations"
-    },
-    {
-      "name": "Tasks",
-      "description": "Task CRUD operations"
-    }
-  ],
-  "paths": {
-    "/auth/google": {
-      "get": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Login with Google OAuth",
-        "description": "Redirects the user to Google for authentication.",
-        "responses": {
-          "302": {
-            "description": "Redirect to Google authentication."
-          }
-        }
-      }
-    },
-
-    "/auth/google/callback": {
-      "get": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Google OAuth callback",
-        "description": "Handles Google's OAuth callback after successful authentication.",
-        "responses": {
-          "302": {
-            "description": "Redirects to Swagger documentation after successful login."
-          },
-          "401": {
-            "description": "Authentication failed."
-          }
-        }
-      }
-    },
-
-    "/auth/me": {
-      "get": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Get current authenticated user",
-        "responses": {
-          "200": {
-            "description": "Current user returned successfully."
-          },
-          "401": {
-            "description": "User is not authenticated."
-          }
-        }
-      }
-    },
-
-    "/auth/logout": {
-      "get": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Log out",
-        "responses": {
-          "200": {
-            "description": "Successfully logged out."
-          }
-        }
-      }
-    },
-
-    "/projects": {
-      "get": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "Get all projects",
-        "description": "Returns all projects belonging to the authenticated user.",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Projects returned successfully."
-          },
-          "401": {
-            "description": "Authentication required."
-          },
-          "500": {
-            "description": "Server error."
-          }
-        }
-      },
-
-      "post": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "Create a project",
-        "description": "Creates a new project after validating the request body.",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProjectInput"
-              }
-            }
-          }
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "Local development server"
         },
-        "responses": {
-          "201": {
-            "description": "Project created successfully."
-          },
-          "400": {
-            "description": "Validation or database error."
-          },
-          "401": {
-            "description": "Authentication required."
-          }
+        {
+            "url": "https://cse-341-project2-v3z1.onrender.com",
+            "description": "Production Render server"
         }
-      }
-    },
-
-    "/projects/{id}": {
-      "get": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "Get project by ID",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Project returned successfully."
-          },
-          "400": {
-            "description": "Invalid project ID."
-          },
-          "401": {
-            "description": "Authentication required."
-          },
-          "404": {
-            "description": "Project not found."
-          },
-          "500": {
-            "description": "Server error."
-          }
-        }
-      },
-
-      "put": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "Update project",
-        "description": "Updates a project after validating the request body.",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/id"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProjectInput"
-              }
-            }
-          }
+    ],
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Google OAuth authentication operations"
         },
-        "responses": {
-          "200": {
-            "description": "Project updated successfully."
-          },
-          "400": {
-            "description": "Validation or database error."
-          },
-          "401": {
-            "description": "Authentication required."
-          },
-          "404": {
-            "description": "Project not found."
-          }
-        }
-      },
-
-      "delete": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "Delete project",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Project deleted successfully."
-          },
-          "401": {
-            "description": "Authentication required."
-          },
-          "404": {
-            "description": "Project not found."
-          },
-          "500": {
-            "description": "Server error."
-          }
-        }
-      }
-    },
-
-    "/tasks": {
-      "get": {
-        "tags": [
-          "Tasks"
-        ],
-        "summary": "Get all tasks",
-        "description": "Returns tasks assigned to the authenticated user.",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Tasks returned successfully."
-          },
-          "401": {
-            "description": "Authentication required."
-          },
-          "500": {
-            "description": "Server error."
-          }
-        }
-      },
-
-      "post": {
-        "tags": [
-          "Tasks"
-        ],
-        "summary": "Create a task",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TaskInput"
-              }
-            }
-          }
+        {
+            "name": "Projects",
+            "description": "Project CRUD operations"
         },
-        "responses": {
-          "201": {
-            "description": "Task created successfully."
-          },
-          "400": {
-            "description": "Validation or database error."
-          },
-          "401": {
-            "description": "Authentication required."
-          }
+        {
+            "name": "Tasks",
+            "description": "Task CRUD operations"
         }
-      }
-    },
-
-    "/tasks/{id}": {
-      "get": {
-        "tags": [
-          "Tasks"
-        ],
-        "summary": "Get task by ID",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Task returned successfully."
-          },
-          "400": {
-            "description": "Invalid task ID."
-          },
-          "401": {
-            "description": "Authentication required."
-          },
-          "404": {
-            "description": "Task not found."
-          }
-        }
-      },
-
-      "put": {
-        "tags": [
-          "Tasks"
-        ],
-        "summary": "Update task",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/id"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TaskInput"
-              }
+    ],
+    "paths": {
+        "/auth/google": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login with Google OAuth",
+                "description": "Redirects the user to Google for authentication.",
+                "responses": {
+                    "302": {
+                        "description": "Redirect to Google authentication."
+                    }
+                }
             }
-          }
         },
-        "responses": {
-          "200": {
-            "description": "Task updated successfully."
-          },
-          "400": {
-            "description": "Validation or database error."
-          },
-          "401": {
-            "description": "Authentication required."
-          },
-          "404": {
-            "description": "Task not found."
-          }
+        "/auth/google/callback": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Google OAuth callback",
+                "description": "Handles Google's OAuth callback after successful authentication.",
+                "responses": {
+                    "302": {
+                        "description": "Redirects to Swagger documentation after successful login."
+                    },
+                    "401": {
+                        "description": "Authentication failed."
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get current authenticated user",
+                "responses": {
+                    "200": {
+                        "description": "Current user returned successfully."
+                    },
+                    "401": {
+                        "description": "User is not authenticated."
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Log out",
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged out."
+                    }
+                }
+            }
+        },
+        "/projects": {
+            "get": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Get all projects",
+                "description": "Returns all projects belonging to the authenticated user.",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Projects returned successfully."
+                    },
+                    "401": {
+                        "description": "Authentication required."
+                    },
+                    "500": {
+                        "description": "Server error."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Create a project",
+                "description": "Creates a new project after validating the request body.",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProjectInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Project created successfully."
+                    },
+                    "400": {
+                        "description": "Validation or database error."
+                    },
+                    "401": {
+                        "description": "Authentication required."
+                    }
+                }
+            }
+        },
+        "/projects/{id}": {
+            "get": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Get project by ID",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Project returned successfully."
+                    },
+                    "400": {
+                        "description": "Invalid project ID."
+                    },
+                    "401": {
+                        "description": "Authentication required."
+                    },
+                    "404": {
+                        "description": "Project not found."
+                    },
+                    "500": {
+                        "description": "Server error."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Update project",
+                "description": "Updates a project after validating the request body.",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProjectInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Project updated successfully."
+                    },
+                    "400": {
+                        "description": "Validation or database error."
+                    },
+                    "401": {
+                        "description": "Authentication required."
+                    },
+                    "404": {
+                        "description": "Project not found."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Delete project",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Project deleted successfully."
+                    },
+                    "401": {
+                        "description": "Authentication required."
+                    },
+                    "404": {
+                        "description": "Project not found."
+                    },
+                    "500": {
+                        "description": "Server error."
+                    }
+                }
+            }
+        },
+        "/tasks": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Get all tasks",
+                "description": "Returns tasks assigned to the authenticated user.",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tasks returned successfully."
+                    },
+                    "401": {
+                        "description": "Authentication required."
+                    },
+                    "500": {
+                        "description": "Server error."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Create a task",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Task created successfully."
+                    },
+                    "400": {
+                        "description": "Validation or database error."
+                    },
+                    "401": {
+                        "description": "Authentication required."
+                    }
+                }
+            }
+        },
+        "/tasks/{id}": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Get task by ID",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task returned successfully."
+                    },
+                    "400": {
+                        "description": "Invalid task ID."
+                    },
+                    "401": {
+                        "description": "Authentication required."
+                    },
+                    "404": {
+                        "description": "Task not found."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Update task",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Task updated successfully."
+                    },
+                    "400": {
+                        "description": "Validation or database error."
+                    },
+                    "401": {
+                        "description": "Authentication required."
+                    },
+                    "404": {
+                        "description": "Task not found."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Delete task",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task deleted successfully."
+                    },
+                    "401": {
+                        "description": "Authentication required."
+                    },
+                    "404": {
+                        "description": "Task not found."
+                    },
+                    "500": {
+                        "description": "Server error."
+                    }
+                }
+            }
         }
-      },
-
-      "delete": {
-        "tags": [
-          "Tasks"
-        ],
-        "summary": "Delete task",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Task deleted successfully."
-          },
-          "401": {
-            "description": "Authentication required."
-          },
-          "404": {
-            "description": "Task not found."
-          },
-          "500": {
-            "description": "Server error."
-          }
+    },
+    "components": {
+        "securitySchemes": {
+            "cookieAuth": {
+                "type": "apiKey",
+                "in": "cookie",
+                "name": "connect.sid"
+            }
+        },
+        "parameters": {
+            "id": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "MongoDB ObjectId",
+                "schema": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
+                }
+            }
+        },
+        "schemas": {
+            "ProjectInput": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "description",
+                    "client",
+                    "status",
+                    "priority",
+                    "budget",
+                    "startDate",
+                    "endDate"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 100,
+                        "example": "Website Redesign"
+                    },
+                    "description": {
+                        "type": "string",
+                        "minLength": 10,
+                        "maxLength": 500,
+                        "example": "Redesign the company website."
+                    },
+                    "client": {
+                        "type": "string",
+                        "example": "ABC Company"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "planning",
+                            "active",
+                            "completed",
+                            "cancelled"
+                        ],
+                        "example": "active"
+                    },
+                    "priority": {
+                        "type": "string",
+                        "enum": [
+                            "low",
+                            "medium",
+                            "high"
+                        ],
+                        "example": "high"
+                    },
+                    "budget": {
+                        "type": "number",
+                        "minimum": 0,
+                        "example": 5000
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-10-01"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-12-01"
+                    }
+                }
+            },
+            "TaskInput": {
+                "type": "object",
+                "required": [
+                    "title",
+                    "description",
+                    "projectId",
+                    "assignedTo",
+                    "status",
+                    "priority",
+                    "dueDate",
+                    "estimatedHours"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 100,
+                        "example": "Create homepage"
+                    },
+                    "description": {
+                        "type": "string",
+                        "minLength": 10,
+                        "maxLength": 500,
+                        "example": "Build the homepage for the website."
+                    },
+                    "projectId": {
+                        "type": "string",
+                        "example": "507f1f77bcf86cd799439011"
+                    },
+                    "assignedTo": {
+                        "type": "string",
+                        "example": "piet@example.com"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "todo",
+                            "in-progress",
+                            "completed"
+                        ],
+                        "example": "todo"
+                    },
+                    "priority": {
+                        "type": "string",
+                        "enum": [
+                            "low",
+                            "medium",
+                            "high"
+                        ],
+                        "example": "medium"
+                    },
+                    "dueDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-11-01"
+                    },
+                    "estimatedHours": {
+                        "type": "number",
+                        "minimum": 0,
+                        "example": 8
+                    },
+                    "completed": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                }
+            }
         }
-      }
     }
-  },
-
-  "components": {
-    "securitySchemes": {
-      "cookieAuth": {
-        "type": "apiKey",
-        "in": "cookie",
-        "name": "connect.sid"
-      }
-    },
-
-    "parameters": {
-      "id": {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "description": "MongoDB ObjectId",
-        "schema": {
-          "type": "string",
-          "example": "507f1f77bcf86cd799439011"
-        }
-      }
-    },
-
-    "schemas": {
-      "ProjectInput": {
-        "type": "object",
-        "required": [
-          "name",
-          "description",
-          "client",
-          "status",
-          "priority",
-          "budget",
-          "startDate",
-          "endDate"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100,
-            "example": "Website Redesign"
-          },
-          "description": {
-            "type": "string",
-            "minLength": 10,
-            "maxLength": 500,
-            "example": "Redesign the company website."
-          },
-          "client": {
-            "type": "string",
-            "example": "ABC Company"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "planning",
-              "active",
-              "completed",
-              "cancelled"
-            ],
-            "example": "active"
-          },
-          "priority": {
-            "type": "string",
-            "enum": [
-              "low",
-              "medium",
-              "high"
-            ],
-            "example": "high"
-          },
-          "budget": {
-            "type": "number",
-            "minimum": 0,
-            "example": 5000
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date",
-            "example": "2026-10-01"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date",
-            "example": "2026-12-01"
-          }
-        }
-      },
-
-      "TaskInput": {
-        "type": "object",
-        "required": [
-          "title",
-          "description",
-          "projectId",
-          "assignedTo",
-          "status",
-          "priority",
-          "dueDate",
-          "estimatedHours"
-        ],
-        "properties": {
-          "title": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100,
-            "example": "Create homepage"
-          },
-          "description": {
-            "type": "string",
-            "minLength": 10,
-            "maxLength": 500,
-            "example": "Build the homepage for the website."
-          },
-          "projectId": {
-            "type": "string",
-            "example": "507f1f77bcf86cd799439011"
-          },
-          "assignedTo": {
-            "type": "string",
-            "example": "piet@example.com"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "todo",
-              "in-progress",
-              "completed"
-            ],
-            "example": "todo"
-          },
-          "priority": {
-            "type": "string",
-            "enum": [
-              "low",
-              "medium",
-              "high"
-            ],
-            "example": "medium"
-          },
-          "dueDate": {
-            "type": "string",
-            "format": "date",
-            "example": "2026-11-01"
-          },
-          "estimatedHours": {
-            "type": "number",
-            "minimum": 0,
-            "example": 8
-          },
-          "completed": {
-            "type": "boolean",
-            "example": false
-          }
-        }
-      }
-    }
-  }
 }
