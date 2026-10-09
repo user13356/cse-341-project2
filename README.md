@@ -87,11 +87,11 @@ npm run dev
 
 ## Local URL
 
-http://localhost:8080
+http://cse-341-project2-v3z1.onrender.com
 
 ## Swagger
 
-http://localhost:8080/api-docs
+https://cse-341-project2-v3z1.onrender.com/api-docs
 
 ## Authentication
 
